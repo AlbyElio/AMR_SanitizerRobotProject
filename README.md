@@ -11,7 +11,7 @@
 
 **Instructor:**
 - Gianluca Palli - gianluca.palli@unibo.it
-- Department: DEI
+- Department: DEI - LAR
 - University: University of Bologna
 - Address: Viale del Risorgimento 2, 40136 Bologna
 
