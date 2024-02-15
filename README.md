@@ -11,7 +11,7 @@
 
 **Instructor:**
 - Gianluca Palli - gianluca.palli@unibo.it
-- Department: DEI - LAR
+- Department: DEI
 - University: University of Bologna
 - Address: Viale del Risorgimento 2, 40136 Bologna
 
@@ -129,6 +129,6 @@ Making a simple calculation, we concluded that to completely sanitize a point in
 
 ### Easy user-interface
 To make the program easy to use by a non-expert user we decided to implement a simple user interface that allow him/her to easily choose the room to be sanitized. The interface is shown below.
-
+![UserInterface](https://github.com/AlbyElio/AMR_SanitizerRobotProject/assets/151182760/e8e1eae6-b435-49f0-b944-7e61ca41b966)
 
 
