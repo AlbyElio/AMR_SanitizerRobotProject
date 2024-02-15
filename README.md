@@ -32,6 +32,7 @@ In order to use the big_house scenario we modified the configuration file of nav
 
 ![bighouse](https://github.com/AlbyElio/AMR_SanitizerRobotProject/assets/151182760/a512c2ce-dc91-45dd-a65c-3df146bb8e05)
 
+
 To launch the simulation of the mapping and/or the sanitization we implemented a system that allows to pass some arguments according to the tasks that the user wants to be completed. When the simulation is launched, the user is asked to provide some parameters, that are:
 - the x and y coordinates of the initial pose of the robot
 - the task to perform: enter 0 for the mapping or 1 for the sanitization
@@ -50,6 +51,7 @@ In our quest for an effective mapping strategy, we opted for a navigation approa
 
 For the implementation we used [this repository](https://github.com/SeanReg/nav2_wavefront_frontier_exploration) designed for nav2 compatibility, making it an ideal match for our objectives. Subsequent testing revealed the repository's code to be highly effective in fulfilling our mapping requirements, leading us to adopt this solution for the project's duration.
 In the following image the concept of frontier is shown.
+
 
 ![Frontier](https://hackmd.io/_uploads/Hk6UjK9sp.png)
 
@@ -70,22 +72,35 @@ When escaping from a room, if the distance to the opposite wall is larger than t
 
 The only way to solve this problem without making changes in the mapping algorithm is providing a lidar device with larger maximum range.
 
-![MappingGif](https://github.com/AlbyElio/AMR_SanitizerRobotProject/assets/151182760/2ec33960-7d56-4f2c-b772-3dc791a10510)
+https://github.com/AlbyElio/AMR_SanitizerRobotProject/assets/151182760/0a0650db-33a7-4ca7-a109-a0bdf2bd49dc
 
 ## Task 3 - Localization in the world 
 For the localization we have used the Adaptive Monte Carlo Localization imlemented in the Nav2 package. To localize the robot, this algorithm uses a particle filter, a localization method based on the continuous update of the probability of the robot to be positioned in a specific point of the map. The algorithm starts with the initialization of a high number of points/particles (e.g. 100) uniformly spawned on the map. Then, the following steps are iteratively performed:
 
-- the weights of the particles are updated basing on how much the position on of the point in the map matches the sensor reading. Namely, if the obstacles near the point are the same as the ones seen by the LIDAR.
-- the covariance matrix id updated. This matrix shows the variance between the estimations of the spacial and angular coordinates of the robot.
+- the weights of the particles are updated basing on how much the position on of the point in the map matches the sensor reading. Namely, if the obstacles near the point are the same as the ones seen by the LIDAR the weight of the point increases.
+- the covariance matrix is updated. This matrix shows the variance between the estimations of the spacial and angular coordinates of the robot.
 - a resample of the particles is executed in order to relocate the points close to the ones with the higher weights.
 
 The position estimation is performed for the entire duration of the simulation.
-As mentioned in the ask 1 Section, to determine the initial position of the robot we implemented two different methods. With the first one, the robot starts immediately using the AMCL; before starting the execution of the tasks, we made the robot wait until all the values of the covariances reach a value lower than 0.1. Thus, during the first part of the simulation the robot will keep switching between rotating and moving to random waypoints in order to make the localization easier.
-The second one, instead, uses the global localization service that initializes the initial pose of the robot with the one given by the user. In this way the robot doesn't need to wait the covariance values to reach 0.1 since the covariance matrix already has very low values.
+As mentioned in the task 1 Section, to determine the initial position of the robot we implemented two different methods. With the first one, we impose the initial pose as the chosen by the user so the covariance will be immediately very low and the robot will soon start to move. With the second approach, we initialize the global localization service obtaining a cloud of particles randomly spread in the map. Then our node, called init_localization_node, makes the robot to start spinning for a given amount of time and then to move to a random waypoint set at a distance of 0.55 meters.
 
 
+https://github.com/AlbyElio/AMR_SanitizerRobotProject/assets/151182760/eb879dd2-37ac-4dc4-86b8-64a156305b57
 
 ## Task 4 - Sanitization of the environment
+To sanitize the envirnoment we discretized the map with a resolution of 0.2 meters and applied the following energy distribution law:
+  $$E(x, y, t) = \int_0^t \frac{P_l}{(x - p_x(\tau))^2 + (y - p_y(\tau))^2} d\tau$$
+
+
+
+https://github.com/AlbyElio/AMR_SanitizerRobotProject/assets/151182760/7c7eac71-2844-4ace-b5ae-005f37467ff0
+
+
+
+
+
+
+
 Suppose that:
 - In order to kill the coronavirus, the robot is equipped with a set of UV lamps able to spread all around the robot a light power \(P_l = 100 µW/m^2\);
 - The UV energy \(E\) at point \((x, y)\) and time \(t\) can be computed as:
