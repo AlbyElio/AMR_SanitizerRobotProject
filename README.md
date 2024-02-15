@@ -91,7 +91,7 @@ https://github.com/AlbyElio/AMR_SanitizerRobotProject/assets/151182760/eb879dd2-
 To sanitize the envirnoment we discretized the map with a resolution of 0.2 meters and applied the following energy distribution law:
 $$E(x, y, t) = \int_0^t \frac{P_l}{(x - p_x(\tau))^2 + (y - p_y(\tau))^2} d\tau$$
 To implement it in the code we used the discrtized equation that is:
-$$E(x, y, t) = \int_0^t \frac{P_l}{(x - p_x(\tau))^2 + (y - p_y(\tau))^2} d\tau$$
+$$E(x, y, k) = \sum_{i=0}^{k} \frac{P_l \Delta t}{(x - p_x(i \Delta t))^2 + (y - p_y(i \Delta t))^2}$$
 
 The sanitization process has been divided in three steps:
 - UV power evaluation: for every point of the discretized map we computed the related instant power value using the node power_publisher_node. This latter, computes the power according to the distance from the robot and shape of the room, provided by the /laser_scan topic. With the message of the laser scan, we generate a polygon using as vertices the points in which the laser bumps into. The power is then evaluated only for the point of the map inside the polygon and it's set as 0 for the points outside the polygon.
