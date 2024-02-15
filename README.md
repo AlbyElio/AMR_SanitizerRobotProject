@@ -89,7 +89,13 @@ https://github.com/AlbyElio/AMR_SanitizerRobotProject/assets/151182760/eb879dd2-
 
 ## Task 4 - Sanitization of the environment
 To sanitize the envirnoment we discretized the map with a resolution of 0.2 meters and applied the following energy distribution law:
-  $$E(x, y, t) = \int_0^t \frac{P_l}{(x - p_x(\tau))^2 + (y - p_y(\tau))^2} d\tau$$
+$$E(x, y, t) = \int_0^t \frac{P_l}{(x - p_x(\tau))^2 + (y - p_y(\tau))^2} d\tau$$
+To implement it in the code we used the discrtized equation that is:
+$$E(x, y, t) = \int_0^t \frac{P_l}{(x - p_x(\tau))^2 + (y - p_y(\tau))^2} d\tau$$
+
+The sanitization process has been divided in three steps:
+- UV power evaluation: for every point of the discretized map we computed the related instant power value using the node power_publisher_node. This latter, computes the power according to the distance from the robot and shape of the room, provided by the /laser_scan topic. With the message of the laser scan, we generate a polygon using as vertices the points in which the laser bumps into. The power is then evaluated only for the point of the map inside the polygon and it's set as 0 for the points outside the polygon.
+- Energy evaluation: 
 
 
 
@@ -104,9 +110,7 @@ https://github.com/AlbyElio/AMR_SanitizerRobotProject/assets/151182760/7c7eac71-
 Suppose that:
 - In order to kill the coronavirus, the robot is equipped with a set of UV lamps able to spread all around the robot a light power \(P_l = 100 µW/m^2\);
 - The UV energy \(E\) at point \((x, y)\) and time \(t\) can be computed as:
-  $$
-  E(x, y, t) = \int_0^t \frac{P_l}{(x - p_x(\tau))^2 + (y - p_y(\tau))^2} d\tau
-  $$
+  
   where \(p_x(t)\) and \(p_y(t)\) represent the robot position along the x and the y axis respectively at time \(t\);
 - Any obstacle completely stops the UV power propagation;
 - The light power emitted at a distance lower than 0.1 meters from the robot is zero due to the robot encumbrance;
