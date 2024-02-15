@@ -94,10 +94,13 @@ To implement it in the code we used the discrtized equation that is:
 $$E(x, y, k) = \sum_{i=0}^{k} \frac{P_l \Delta t}{(x - p_x(i \Delta t))^2 + (y - p_y(i \Delta t))^2}$$
 
 The sanitization process has been divided in three steps:
-- UV power evaluation: for every point of the discretized map we computed the related instant power value using the node power_publisher_node. This latter, computes the power according to the distance from the robot and shape of the room, provided by the /laser_scan topic. With the message of the laser scan, we generate a polygon using as vertices the points in which the laser bumps into. The power is then evaluated only for the point of the map inside the polygon and it's set as 0 for the points outside the polygon.
-- Energy evaluation: 
+- UV power evaluation: for every point of the discretized map we computed the related instant power value using the node power_publisher_node. This latter, computes the power according to the distance from the robot and shape of the room, provided by the /laser_scan topic. With the message of the laser scan, we generate a polygon using as vertices the points in which the laser bumps into. The power is then evaluated only for the point of the map inside the polygon and it's set as 0 for the points outside the polygon. Eventually, the power is published as a message of type OccupancyGrid via our custom topic /power_map. This process is shown in the figure below.
+- Energy evaluation: the topic published by the previous node is subscribed by the node /energy_publisher_node and integrated using the formula above. The sampling time $\Delta t$ is given by measuring the interval of time between two consecutive publications of the power message. Also he energy is published as an OccupancyGrid message via the topic /energy_map.
+- Navigation: the node /energy_navigation_node receives the map of the energy published in the previous step and computes a waypoint to be reached using the Navigate To Pose action server given by the Nav2 ROS2 package. The waypoint is chosen as the closest point in the map with a energy level lower than 10mJ among the ones in the desired rooms to be sanitized.
 
+For the RViz visualization we choosed the cost_map color scheme that impose to use values in the range 0 to 98. In order to cover the entire range of energy values, we converted the values of the maps by multiplying by a scaling factor.
 
+![UV_penetration](https://github.com/AlbyElio/AMR_SanitizerRobotProject/assets/151182760/36834653-39ea-4674-aa08-aedf4557960f)
 
 https://github.com/AlbyElio/AMR_SanitizerRobotProject/assets/151182760/7c7eac71-2844-4ace-b5ae-005f37467ff0
 
