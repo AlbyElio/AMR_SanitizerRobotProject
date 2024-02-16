@@ -119,7 +119,7 @@ Another parameter that we needed to change is the local cost map inflation facto
 
 ### LIDAR maximum range and frequency
 We need to change following two parameters of the LIDAR, the scan frequeny and the maximum range because they provided some issues in two different scenarios. The first scenario was the recognition of the free spaces in the SLAM operation as explained in the Task 1 section. The second one was the computation of the power cost map. In fact, a low maximum range of the LIDAR does not allow us to generate the polygon used to compute the points to be sanitized. This implies that there was no way to avoid the UV rays to go through the walls or other obstacles positioned further than the maximum range. For what concernes the frequency of the laser topic publication, a low frequency update lead to a slow update of the shape of the polygon, causing in its turn a delay in the power map update with respect to the actual robot pose.
-In order to avoid this problems we modified the two parameter increasing both of them. We also found a cheap commercial LIDAR that matches our performace requests.
+In order to avoid this problems we modified the two parameter increasing both of them. We also found a cheap [commercial LIDAR](https://www.robot-italy.com/it/rplidar-a1m8-360-degree-laser-scanner.html) that matches our performace requests.
 
 ### Goal and path tolerances
 The SLAM toolbox offers the possibility to set a tolerance on the final pose and on the path following. Since we don't need an high precision on reaching on the final pose for these specific tasks, we set high tolerance values.
